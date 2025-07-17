@@ -10,7 +10,7 @@ public interface IPatcherLogger
     /// Logs a message.
     /// </summary>
     /// <param name="message">The message to log.</param>
-    public void LogMessage(string message);
+    void LogMessage(string message);
 
     /// <summary>
     /// Logs statistics for the placed object remover.
@@ -20,7 +20,7 @@ public interface IPatcherLogger
     /// This method is used to log the statistics related to placed object removals,
     /// including the number of spell tomes skipped and removed.
     /// </remarks>
-    public void LogPlacedObjectRemoverStats(in PlacedObjectRemoverStats Stats);
+    void LogPlacedObjectRemoverStats(in PlacedObjectRemoverStats Stats);
 
     /// <summary>
     /// Logs statistics for the leveled item remover.
@@ -30,7 +30,7 @@ public interface IPatcherLogger
     /// This method is used to log the statistics related to leveled item removals,
     /// including the number of leveled lists skipped, spell tomes skipped, and spell tomes removed.
     /// </remarks>
-    public void LogLeveledItemRemoverStats(in LeveledItemRemoverStats Stats);
+    void LogLeveledItemRemoverStats(in LeveledItemRemoverStats Stats);
 
     /// <summary>
     /// Logs statistics for the container remover.
@@ -40,5 +40,17 @@ public interface IPatcherLogger
     /// This method is used to log the statistics related to container removals,
     /// including the number of containers skipped and removed.
     /// </remarks>
-    public void LogContainerRemoverStats(in ContainerRemoverStats Stats);
+    void LogContainerRemoverStats(in ContainerRemoverStats Stats);
+
+    public static IPatcherLogger Create()
+    {
+        if (Settings.Instance.Value.QuietRun)
+        {
+            return new QuietLogger();
+        }
+        else
+        {
+            return new ConsolePatcherLogger();
+        }
+    }
 }

@@ -43,4 +43,11 @@ public class Settings
     /// </summary>
     [SettingName("Plugin Blacklist")]
     public List<PluginBlacklistEntry> PluginBlackList = [];
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to run the patcher in quiet mode.
+    /// If true, the patcher will not output messages to the console.
+    /// </summary>
+    [SettingName("Quiet Run")]
+    public bool QuietRun { get; set; } = false;
 }

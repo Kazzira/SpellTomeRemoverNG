@@ -23,7 +23,7 @@ public class Program
     /// </summary>
     public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
     {
-        Patcher patcher = new(state, new ConsolePatcherLogger());
+        Patcher patcher = new(state, IPatcherLogger.Create());
         patcher.Run();
     }
 }

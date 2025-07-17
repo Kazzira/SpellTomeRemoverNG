@@ -262,7 +262,7 @@ public class Patcher(
     /// </summary>
     private void RemovePlacedSpellTomes()
     {
-        Console.WriteLine("Removing placed spell tomes...");
+        Logger.LogMessage("Removing placed spell tomes...");
 
         foreach (var placedObject in State.LoadOrder.PriorityOrder.PlacedObject().WinningContextOverrides(State.LinkCache))
 
@@ -283,7 +283,7 @@ public class Patcher(
     /// </summary>
     private void RemoveSpellTomesFromContainers()
     {
-        Console.WriteLine("Removing spell tomes from containers...");
+        Logger.LogMessage("Removing spell tomes from containers...");
 
         foreach (var container in State.LoadOrder.PriorityOrder.Container().WinningOverrides())
         {
@@ -316,7 +316,7 @@ public class Patcher(
     /// </summary>
     private void RemoveSpellTomesFromLeveledLists()
     {
-        Console.WriteLine("Removing spell tomes from leveled lists...");
+        Logger.LogMessage("Removing spell tomes from leveled lists...");
 
         foreach (var leveledItemList in State.LoadOrder.PriorityOrder.LeveledItem().WinningOverrides())
         {
