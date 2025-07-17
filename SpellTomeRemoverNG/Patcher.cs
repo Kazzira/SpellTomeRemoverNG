@@ -12,8 +12,6 @@ public class Patcher(
     IPatcherLogger PatcherLogger
 )
 {
-    public static Lazy<Settings> Settings = null!;
-
     private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> State = PatcherState;
     private readonly IPatcherLogger Logger = PatcherLogger;
 
@@ -123,7 +121,7 @@ public class Patcher(
     )
     {
         return predicate(
-            Settings.Value.PluginBlackList.FirstOrDefault(
+            Settings.Instance.Value.PluginBlackList.FirstOrDefault(
                 entry => entry.PluginFileName == formKeyGetter.FormKey.ModKey.FileName
             )
         );
