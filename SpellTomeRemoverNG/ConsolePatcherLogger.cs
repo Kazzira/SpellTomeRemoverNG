@@ -1,27 +1,35 @@
 namespace SpellTomeRemoverNG;
 
+/// <summary>
+/// Console logger for the patcher.
+/// </summary>
 public class ConsolePatcherLogger : IPatcherLogger
 {
+    public void LogMessage(string message)
+    {
+        Console.WriteLine(message);
+    }
+
     public void LogContainerRemoverStats(in ContainerRemoverStats Stats)
     {
-        Console.WriteLine($"Skipped {Stats.ContainersSkipped} containers.");
-        Console.WriteLine($"Skipped {Stats.SpellTomesSkipped} spell tomes.");
-        Console.WriteLine($"Removed {Stats.SpellTomesRemoved} spell tomes from {Stats.ContainersModified} containers.");
-        Console.WriteLine("");
+        LogMessage($"Skipped {Stats.ContainersSkipped} containers.");
+        LogMessage($"Skipped {Stats.SpellTomesSkipped} spell tomes.");
+        LogMessage($"Removed {Stats.SpellTomesRemoved} spell tomes from {Stats.ContainersModified} containers.");
+        LogMessage("");
     }
 
     public void LogLeveledItemRemoverStats(in LeveledItemRemoverStats Stats)
     {
-        Console.WriteLine($"Skipped {Stats.LeveledListsSkipped} leveled lists.");
-        Console.WriteLine($"Skipped {Stats.SpellTomesSkipped} spell tomes.");
-        Console.WriteLine($"Removed {Stats.SpellTomesRemoved} spell tomes from {Stats.LeveledListsModified} leveled lists.");
-        Console.WriteLine("");
+        LogMessage($"Skipped {Stats.LeveledListsSkipped} leveled lists.");
+        LogMessage($"Skipped {Stats.SpellTomesSkipped} spell tomes.");
+        LogMessage($"Removed {Stats.SpellTomesRemoved} spell tomes from {Stats.LeveledListsModified} leveled lists.");
+        LogMessage("");
     }
 
     public void LogPlacedObjectRemoverStats(in PlacedObjectRemoverStats Stats)
     {
-        Console.WriteLine($"Skipped {Stats.SpellTomesSkipped} spell tomes.");
-        Console.WriteLine($"Removed {Stats.SpellTomesRemoved} placed spell tomes.");
-        Console.WriteLine("");
+        LogMessage($"Skipped {Stats.SpellTomesSkipped} spell tomes.");
+        LogMessage($"Removed {Stats.SpellTomesRemoved} placed spell tomes.");
+        LogMessage("");
     }
 }

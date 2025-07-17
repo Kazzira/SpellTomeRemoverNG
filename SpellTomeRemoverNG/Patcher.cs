@@ -7,16 +7,38 @@ using static LanguageExt.Prelude;
 
 namespace SpellTomeRemoverNG;
 
+/// <summary>
+/// Patcher class for removing spell tomes from Skyrim mods.
+/// </summary>
+/// <param name="PatcherState">The state of the patcher.</param>
+/// <param name="PatcherLogger">The logger for the patcher.</param>
+/// <remarks>
+/// This class implements the patching logic for removing spell tomes from containers, leveled lists, and placed objects in Skyrim mods.
+/// It uses the Mutagen framework to interact with Skyrim mod data.
+/// </remarks>
 public class Patcher(
     IPatcherState<ISkyrimMod, ISkyrimModGetter> PatcherState,
     IPatcherLogger PatcherLogger
 )
 {
+    /// <summary>
+    /// The state of the patcher.
+    /// </summary>
     private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> State = PatcherState;
+    /// <summary>
+    /// The logger for the patcher.
+    /// </summary>
     private readonly IPatcherLogger Logger = PatcherLogger;
 
+    /// <summary>
+    /// Statistics for the patching process.
+    /// </summary>
     private PatcherStats Stats = new();
 
+    /// <summary>
+    /// Returns true if the container can be skipped.
+    /// <param name="container">The container to check.</param>
+    /// <returns>True if the container can be skipped, false otherwise.</returns>
     private bool CanContainerBeSkipped(IContainerGetter container)
     {
         // Skip containers from blacklisted mods.
@@ -29,6 +51,11 @@ public class Patcher(
         return false;
     }
 
+    /// <summary>
+    /// Returns true if the container item can be skipped.
+    /// </summary>
+    /// <param name="containerItem">The container item to check.</param>
+    /// <returns>True if the container item can be skipped, false otherwise.</returns>
     private bool CanContainerItemBeSkipped(IContainerItemGetter containerItem)
     {
         // A book?
@@ -49,6 +76,11 @@ public class Patcher(
         return false;
     }
 
+    /// <summary>
+    /// Returns true if the leveled item can be skipped.
+    /// </summary>
+    /// <param name="leveledItem">The leveled item to check.</param>
+    /// <returns>True if the leveled item can be skipped, false otherwise.</returns
     private bool CanLeveledItemBeSkipped(ILeveledItemGetter leveledItem)
     {
         // Skip leveled lists from blacklisted mods.
@@ -62,6 +94,11 @@ public class Patcher(
         return false;
     }
 
+    /// <summary>
+    /// Returns true if the leveled item entry can be skipped.
+    /// </summary>
+    /// <param name="entry">The leveled item entry to check.</param>
+    /// <returns>True if the leveled item entry can be skipped, false otherwise.</returns>
     private bool CanLeveledItemEntryBeSkipped(ILeveledItemEntryGetter entry)
     {
         // No entry data?
@@ -82,6 +119,11 @@ public class Patcher(
         return false;
     }
 
+    /// <summary>
+    /// Returns true if the placed spell tome can be skipped.
+    /// </summary>
+    /// <param name="placedObject">The placed object to check.</param>
+    /// <returns>True if the placed spell tome can be skipped, false otherwise.</returns
     private bool CanPlacedSpellTomeBeSkipped(IPlacedObjectGetter placedObject)
     {
         // Item already disabled?
@@ -127,18 +169,43 @@ public class Patcher(
         );
     }
 
+    /// <summary>
+    /// Returns true if the container is blacklisted.
+    /// </summary>
+    /// <param name="container">The container to check.</param>
+    /// <returns>True if the container is blacklisted, false otherwise.</returns>
     private static bool IsContainerBlacklisted(IContainerGetter container) =>
-        IsObjectBlacklisted(container, entry => entry?.BlacklistContainers ?? false);
+        IsObjectBlacklisted(container, entry => entry?.SkipContainers ?? false);
 
+    /// <summary>
+    /// Returns true if the leveled list is blacklisted.
+    /// </summary>
+    /// <param name="leveledItem">The leveled item to check.</param>
+    /// <returns>True if the leveled list is blacklisted, false otherwise.</returns>
     private static bool IsLeveledListBlacklisted(ILeveledItemGetter leveledItem) =>
-        IsObjectBlacklisted(leveledItem, entry => entry?.BlacklistLeveledLists ?? false);
+        IsObjectBlacklisted(leveledItem, entry => entry?.SkipLeveledLists ?? false);
 
+    /// <summary>
+    /// Returns true if the placed item is blacklisted.
+    /// </summary>
+    /// <param name="placedObject">The placed object to check.</param>
+    /// <returns>True if the placed item is blacklisted, false otherwise.</returns>
     private static bool IsPlacedItemBlacklisted(IPlacedObjectGetter placedObject) =>
-        IsObjectBlacklisted(placedObject, entry => entry?.BlacklistPlacedObjects ?? false);
+        IsObjectBlacklisted(placedObject, entry => entry?.SkipPlacedObjects ?? false);
 
+    /// <summary>
+    /// Returns true if the book is blacklisted.
+    /// </summary>
+    /// <param name="book">The book to check.</param>
+    /// <returns>True if the book is blacklisted, false otherwise.</returns>
     private static bool IsBookBlacklisted(IBookGetter book) =>
-        IsObjectBlacklisted(book, entry => entry?.BlacklistBooks ?? false);
+        IsObjectBlacklisted(book, entry => entry?.SkipBooks ?? false);
 
+    /// <summary>
+    /// Handles the removal of items from a container.
+    /// </summary>
+    /// <param name="itemIndicesToRemove">The indices of the items to remove.</param>
+    /// <returns>An action that removes items from the container.</returns>
     private Action<IContainer> HandleRemoveItemsFromContainer(List<int> itemIndicesToRemove)
     {
         return ctnr =>
@@ -148,6 +215,11 @@ public class Patcher(
         };
     }
 
+    /// <summary>
+    /// Handles the removal of items from a leveled list.
+    /// </summary>
+    /// <param name="itemIndicesToRemove">The indices of the items to remove.</param>
+    /// <returns>An action that removes items from the leveled list.</returns>
     private Action<ILeveledItem> HandleRemoveItemsFromLeveledList(List<int> itemIndicesToRemove)
     {
         return lvli =>
@@ -157,8 +229,16 @@ public class Patcher(
         };
     }
 
+    /// <summary>
+    /// No operation method.
+    /// </summary>
     private static void NoOp() { }
 
+    /// <summary>
+    /// Removes items from a container.
+    /// </summary>
+    /// <param name="container">The container to modify.</param>
+    /// <param name="itemIndicesToRemove">The indices of the items to remove.</param>
     private static void RemoveItemsFromContainer(IContainer container, List<int> itemIndicesToRemove)
     {
         if (container.Items is null) return;
@@ -169,6 +249,11 @@ public class Patcher(
         }
     }
 
+    /// <summary>
+    /// Removes items from a leveled list.
+    /// </summary>
+    /// <param name="leveledItem">The leveled item to modify.</param>
+    /// <param name="itemIndicesToRemove">The indices of the items to remove.</param>
     private static void RemoveItemsFromLeveledList(ILeveledItem leveledItem, List<int> itemIndicesToRemove)
     {
         if (leveledItem.Entries is null) return;
@@ -179,6 +264,9 @@ public class Patcher(
         }
     }
 
+    /// <summary>
+    /// Removes placed spell tomes from the game.
+    /// </summary>
     private void RemovePlacedSpellTomes()
     {
         Console.WriteLine("Removing placed spell tomes...");
@@ -197,6 +285,9 @@ public class Patcher(
         Logger.LogPlacedObjectRemoverStats(in Stats.PlacedObjectRemover);
     }
 
+    /// <summary>
+    /// Removes spell tomes from containers.
+    /// </summary>
     private void RemoveSpellTomesFromContainers()
     {
         Console.WriteLine("Removing spell tomes from containers...");
@@ -227,6 +318,9 @@ public class Patcher(
         Logger.LogContainerRemoverStats(in Stats.ContainerRemover);
     }
 
+    /// <summary>
+    /// Removes spell tomes from leveled lists.
+    /// </summary>
     private void RemoveSpellTomesFromLeveledLists()
     {
         Console.WriteLine("Removing spell tomes from leveled lists...");
@@ -237,7 +331,7 @@ public class Patcher(
             List<int> itemIndiciesToRemove = [];
 
             if (CanLeveledItemBeSkipped(leveledItemList)) continue;
-            if (leveledItemList.Entries is null         ) continue;
+            if (leveledItemList.Entries is null) continue;
 
             for (int i = 0; i < leveledItemList.Entries.Count; ++i)
             {
@@ -258,6 +352,9 @@ public class Patcher(
         Logger.LogLeveledItemRemoverStats(in Stats.LeveledItemRemover);
     }
 
+    /// <summary>
+    /// Runs the patcher to remove spell tomes from Skyrim mods.
+    /// </summary>
     public void Run()
     {
         RemovePlacedSpellTomes();
