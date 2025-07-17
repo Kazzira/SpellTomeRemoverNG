@@ -133,15 +133,8 @@ public class Patcher(
         // A spell tome?
         if (placedBook.Teaches is not IBookSpellGetter) return true;
 
-        // Placed item is from a blacklisted mod?
-        if (IsPlacedItemBlacklisted(placedObject))
-        {
-            ++Stats.PlacedObjectRemover.SpellTomesSkipped;
-            return true;
-        }
-
-        // book is from a blacklisted mod?
-        if (IsBookBlacklisted(placedBook))
+        // Placed item or book is from a blacklisted mod?
+        if (IsPlacedItemBlacklisted(placedObject) || IsBookBlacklisted(placedBook))
         {
             ++Stats.PlacedObjectRemover.SpellTomesSkipped;
             return true;
@@ -159,14 +152,14 @@ public class Patcher(
     /// <returns>true if object is blacklisted, false otherwise.</returns>
     private static bool IsObjectBlacklisted(
         IFormKeyGetter formKeyGetter,
-        Func<PluginBlacklistEntry?, bool> predicate
+        Func<PluginBlacklistEntry, bool> predicate
     )
     {
-        return predicate(
-            Settings.Instance.Value.PluginBlackList.FirstOrDefault(
-                entry => entry.PluginFileName == formKeyGetter.FormKey.ModKey.FileName
-            )
-        );
+        return Settings.Instance.Value.PluginBlackList
+                                      .Where(entry => entry.PluginFileName == formKeyGetter.FormKey.ModKey.FileName)
+                                      .ToOption()
+                                      .Map(predicate)
+                                      .IfNone(false);
     }
 
     /// <summary>
@@ -175,7 +168,7 @@ public class Patcher(
     /// <param name="container">The container to check.</param>
     /// <returns>True if the container is blacklisted, false otherwise.</returns>
     private static bool IsContainerBlacklisted(IContainerGetter container) =>
-        IsObjectBlacklisted(container, entry => entry?.SkipContainers ?? false);
+        IsObjectBlacklisted(container, entry => entry.SkipContainers);
 
     /// <summary>
     /// Returns true if the leveled list is blacklisted.
@@ -183,7 +176,7 @@ public class Patcher(
     /// <param name="leveledItem">The leveled item to check.</param>
     /// <returns>True if the leveled list is blacklisted, false otherwise.</returns>
     private static bool IsLeveledListBlacklisted(ILeveledItemGetter leveledItem) =>
-        IsObjectBlacklisted(leveledItem, entry => entry?.SkipLeveledLists ?? false);
+        IsObjectBlacklisted(leveledItem, entry => entry.SkipLeveledLists);
 
     /// <summary>
     /// Returns true if the placed item is blacklisted.
@@ -191,7 +184,7 @@ public class Patcher(
     /// <param name="placedObject">The placed object to check.</param>
     /// <returns>True if the placed item is blacklisted, false otherwise.</returns>
     private static bool IsPlacedItemBlacklisted(IPlacedObjectGetter placedObject) =>
-        IsObjectBlacklisted(placedObject, entry => entry?.SkipPlacedObjects ?? false);
+        IsObjectBlacklisted(placedObject, entry => entry.SkipPlacedObjects);
 
     /// <summary>
     /// Returns true if the book is blacklisted.
@@ -199,7 +192,7 @@ public class Patcher(
     /// <param name="book">The book to check.</param>
     /// <returns>True if the book is blacklisted, false otherwise.</returns>
     private static bool IsBookBlacklisted(IBookGetter book) =>
-        IsObjectBlacklisted(book, entry => entry?.SkipBooks ?? false);
+        IsObjectBlacklisted(book, entry => entry.SkipBooks);
 
     /// <summary>
     /// Handles the removal of items from a container.
