@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.WPF.Reflection.Attributes;
 
 namespace SpellTomeRemoverNG;
@@ -6,7 +7,7 @@ namespace SpellTomeRemoverNG;
 /// Represents an entry in the plugin blacklist.
 /// This record contains information about a plugin that should be skipped during the patching process.
 /// </summary>
-/// <param name="PluginFileName">The file name of the plugin to be blacklisted.</param>
+/// <param name="PluginName">The name of the plugin to be blacklisted.</param>
 /// <param name="SkipLeveledLists">Indicates whether leveled lists from this plugin should be skipped.</param>
 /// <param name="SkipContainers">Indicates whether containers from this plugin should be skipped.</param>
 /// <param name="SkipPlacedObjects">Indicates whether placed objects from this plugin should be skipped.</param>
@@ -16,7 +17,7 @@ namespace SpellTomeRemoverNG;
 /// allowing users to customize the behavior of the Spell Tome Remover.
 /// </remarks>
 public record PluginBlacklistEntry(
-    string PluginFileName,
+    ModKey PluginName,
     bool SkipLeveledLists,
     bool SkipContainers,
     bool SkipPlacedObjects,
