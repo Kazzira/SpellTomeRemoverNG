@@ -156,7 +156,7 @@ public class Patcher(
     )
     {
         return Settings.Instance.Value.PluginBlackList
-                                      .Where(entry => entry.PluginFileName == formKeyGetter.FormKey.ModKey.FileName)
+                                      .Where(entry => entry.PluginName == formKeyGetter.FormKey.ModKey.FileName)
                                       .ToOption()
                                       .Map(predicate)
                                       .IfNone(false);
