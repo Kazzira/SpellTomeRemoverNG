@@ -1,0 +1,14 @@
+{
+    "NickName": "SpellTomeRemoverNG",
+    "Visibility": "Visible",
+    "OneLineDescription": "Removes spell tomes from the world, containers, and leveled lists",
+    "LongDescription": "",
+    "PreferredAutoVersioning": "Default",
+    "RequiredMods": [],
+    "TargetedReleases": [
+        "SkyrimLE",
+        "SkyrimSE",
+        "SkyrimVR",
+        "SkyrimSEGog"
+    ]
+}
