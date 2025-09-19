@@ -147,16 +147,16 @@ public class Patcher(
     /// <summary>
     /// Returns true if the object is blacklisted.
     /// </summary>
-    /// <param name="formKeyGetter">The object to check.</param>
+    /// <param name="objectToCheck">The object to check.</param>
     /// <param name="predicate">Takes a PluginBlacklistEntry and returns a bool.</param>
     /// <returns>true if object is blacklisted, false otherwise.</returns>
     private static bool IsObjectBlacklisted(
-        IFormKeyGetter formKeyGetter,
+        IFormKeyGetter objectToCheck,
         Func<PluginBlacklistEntry, bool> predicate
     )
     {
         return Settings.Instance.Value.PluginBlackList
-                                      .Where(entry => entry.PluginName == formKeyGetter.FormKey.ModKey)
+                                      .Where(entry => entry.PluginName == objectToCheck.FormKey.ModKey)
                                       .ToOption()
                                       .Map(predicate)
                                       .IfNone(false);
