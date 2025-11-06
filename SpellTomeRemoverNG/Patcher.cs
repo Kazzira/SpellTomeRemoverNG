@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using LanguageExt;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Plugins.Records;
@@ -223,11 +224,6 @@ public class Patcher(
     }
 
     /// <summary>
-    /// No operation method.
-    /// </summary>
-    private static void NoOp() { }
-
-    /// <summary>
     /// Removes items from a container.
     /// </summary>
     /// <param name="container">The container to modify.</param>
@@ -305,10 +301,7 @@ public class Patcher(
                 ++Stats.ContainerRemover.SpellTomesRemoved;
             }
 
-            modifiedContainer.Match(
-                None: NoOp,
-                Some: HandleRemoveItemsFromContainer(itemIndiciesToRemove)
-            );
+            modifiedContainer.IfSome(HandleRemoveItemsFromContainer(itemIndiciesToRemove));
         }
 
         Logger.LogContainerRemoverStats(in Stats.ContainerRemover);
@@ -342,10 +335,7 @@ public class Patcher(
                 ++Stats.LeveledItemRemover.SpellTomesRemoved;
             }
 
-            modifiedLeveledItem.Match(
-                None: NoOp,
-                Some: HandleRemoveItemsFromLeveledList(itemIndiciesToRemove)
-            );
+            modifiedLeveledItem.IfSome(HandleRemoveItemsFromLeveledList(itemIndiciesToRemove));
         }
 
         Logger.LogLeveledItemRemoverStats(in Stats.LeveledItemRemover);
