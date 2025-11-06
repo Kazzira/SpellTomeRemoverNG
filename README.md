@@ -34,4 +34,4 @@ This option will allow the patcher to not remove spell tomes from any leveled li
 # Credits
 - SpellTomeYeeter - I used it as a reference
 - Synthesis/Mutagen Team - For making this possible
-- Bethsda - For making the games
+- Bethesda - For making the games
