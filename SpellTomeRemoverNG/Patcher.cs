@@ -260,6 +260,9 @@ public class Patcher(
     /// <summary>
     /// Removes placed spell tomes from the game.
     /// </summary>
+    /// <remarks>
+    /// This method was written using the SpellTomeYeeter Synthesis patcher as a reference.
+    /// </remarks>
     private void RemovePlacedSpellTomes()
     {
         Logger.LogMessage("Removing placed spell tomes...");
@@ -314,6 +317,9 @@ public class Patcher(
     /// <summary>
     /// Removes spell tomes from leveled lists.
     /// </summary>
+    /// <remarks>
+    /// This method was written using the SpellTomeYeeter Synthesis patcher as a reference.
+    /// </remarks>
     private void RemoveSpellTomesFromLeveledLists()
     {
         Logger.LogMessage("Removing spell tomes from leveled lists...");

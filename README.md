@@ -30,3 +30,8 @@ This option will allow the patcher to not remove spell tomes from any container 
 
 #### Skip Spell Tomes From Mod-Added Leveled Lists
 This option will allow the patcher to not remove spell tomes from any leveled lists added by the blacklisted plugin.
+
+# Credits
+- SpellTomeYeeter - I used it as a reference
+- Synthesis/Mutagen Team - For making this possible
+- Bethsda - For making the games
